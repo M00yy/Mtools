@@ -1,24 +1,33 @@
-#!/usr/bin/python3
-# -*- coding:utf-8 -*- 
+#! /usr/bin/env python3
+# -*- coding: utf-8 -*-
 # Author: M00yy
-# Time: 2020-01-19 
+# Time: 2020-01-21 
 # Site: https://m00yy.github.io
 
 '''
-base+Caesar的整合，快速的解题。by M00yy
-'''
+ __  __ _              _       _             __  __  ___   ___              
+|  \/  | |_ ___   ___ | |___  | |__  _   _  |  \/  |/ _ \ / _ \ _   _ _   _ 
+| |\/| | __/ _ \ / _ \| / __| | '_ \| | | | | |\/| | | | | | | | | | | | | |
+| |  | | || (_) | (_) | \__ \ | |_) | |_| | | |  | | |_| | |_| | |_| | |_| |
+|_|  |_|\__\___/ \___/|_|___/ |_.__/ \__, | |_|  |_|\___/ \___/ \__, |\__, |
+                                     |___/                      |___/ |___/ 
 
+by M00yy
+'''
+# V1.0.0
+
+from optparse import *
+import base64
+import sys
 import base64
 import base36
 import base58
 import base62
 import base91
 import py3base92 as base92
-import sys
 import os
 import string
-
-
+# usage="python3 Mtools.py [options]"
 banner = '''\033[32m
  __  __ _              _       _             __  __  ___   ___              \033[32m
 |  \/  | |_ ___   ___ | |___  | |__  _   _  |  \/  |/ _ \ / _ \ _   _ _   _ \033[32m
@@ -29,24 +38,12 @@ banner = '''\033[32m
                                                                             \033[33m https://m00yy.github.io\033[0m
 '''
 
-Usage = 'Usage: python3 Mtools.py [options]'
-options = '''
--h --help                        Show basic help message and exit
--b16 encrypt/decrypt  text       encrypt/decrypt base16
--b32 encrypt/decrypt  text       encrypt/decrypt base32
--b36 encrypt/decrypt  text       encrypt/decrypt base36
--b58 encrypt/decrypt  text       encrypt/decrypt base58
--b62 encrypt/decrypt  text       encrypt/decrypt base62
--b64 encrypt/decrypt  text       encrypt/decrypt base64
--b85a encrypt/decrypt text       encrypt/decrypt base85 module a
--b85b encrypt/decrypt text       encrypt/decrypt base85 module b
--b91 encrypt/decrypt  text       encrypt/decrypt base91
--b92 encrypt/decrypt  text       encrypt/decrypt base92
--Caesar -c            text       Caesar
+'''
+python3 base-Mtools.py -c -t caesar
+python3 base-Mtools.py -c|-d -m b64 -t 123 
 '''
 
-h = sys.argv[1]
-
+# parser=optparse.OptionParser(usage)
 def move(ch: str, k: int):
     if ch.islower():
         i = string.ascii_lowercase.find(ch)
@@ -61,102 +58,129 @@ def caesar(text:str,k:int):
     for i in text:
         cipher += move(i,k)
     return cipher
-    
+
+def main():
+    usage = "[*] Usage: %prog <-e|-d> <-c|--Caesar> <-m|--method Method> -t TEXT "
+    parser = OptionParser(version="1.0.0",usage=usage)
+    # base16
+    parser.add_option("-m","--method",dest="method",action="store",metavar="METHOD",help="which method")
+    parser.add_option("-e","--encrypt",dest="deal",action="store_true",default="True",help="encrypt")
+    parser.add_option("-d","--decrypt",dest="deal",action="store_false",help="decrypt")
+    parser.add_option("-t","--text",dest="text",type="string",metavar="Text",help="input text")
+    parser.add_option("-c","--Caesar",dest="caesar",action="store_true",help="Caesar Cipher")
+
+    (options,args) = parser.parse_args()
+    if options.caesar == True:
+        print("[*] Finish!!")
+        print()
+        for cnt in range(26):
+            print("[*] " + caesar(options.text,cnt))
+        sys.exit()
+    # encrypt
+    if options.deal == True:
+        if options.method in ["b16","base16"]:
+            print("[*] Finish!!")
+            print()
+            print("[*] " + base64.b16encode(options.text.encode('utf-8')))
+            sys.exit()
+        elif options.method in ["b32","base32"]:
+            print("[*] Finish!!")
+            print()
+            print("[*] " + base64.b32encode(options.text.encode("utf-8")))
+            sys.exit()
+        elif options.method in ["b64","base64"]:
+            print("[*] Finish!!")
+            print()
+            print("[*] " + base64.b64encode(options.text.encode("utf-8")))
+            sys.exit() 
+        elif options.method in ["b85a","base85a"]:
+            print("[*] Finish!!")
+            print()
+            print("[*] " + base64.a85encode(options.text.encode("utf-8")))
+            sys.exit()
+        elif options.method in ["b85b","base85b"]:
+            print("[*] Finish!!")
+            print()
+            print("[*] " + base64.b85encode(options.text.encode("utf-8")))
+            sys.exit()
+        elif options.method in ["b91","base91"]:
+            print("[*] Finish!!")
+            print()
+            print("[*] " + base91.encode(options.text.encode("utf-8")))
+            sys.exit()
+        elif options.method in ["b92","base92"]:
+            print("[*] Finish!!")
+            print()
+            print("[*] " + base92.encode(options.text.encode("utf-8")))
+            sys.exit()
+        elif options.method in ["b36","base36"]:
+            print("[*] Finish!!")
+            print()
+            print("[*] " + base36.loads(options.text))
+            sys.exit()
+        elif options.method in ["b58","base58"]:
+            print("[*] Finish!!")
+            print()
+            print("[*] " + base58.b58encode(options.text))
+            sys.exit()
+        elif options.method in ["b62","base62"]:
+            print("[*] Finish!!")
+            print()
+            print("[*] " + base62.encode(int(options.text)))
+            sys.exit()
+    else:
+        if options.method in ["b16","base16"]:
+            print("[*] Finish!!")
+            print()
+            print("[*] " + base64.b16decode(options.text.encode("utf-8")))
+            sys.exit()
+        elif options.method in ["b32","base32"]:
+            print("[*] Finish!!")
+            print()
+            print()
+            print("[*] " + base64.b32decode(options.text.encode("utf-8")))
+            sys.exit()
+        elif options.method in ["b64","base64"]:
+            print("[*] Finish!!")
+            print()
+            print("[*] " + base64.b64decode(options.text.encode("utf-8")))
+            sys.exit()
+        elif options.method in ["b85a","base85a"]:
+            print("[*] Finish!!")
+            print()
+            print("[*] " + base64.a85decode(options.text.encode("utf-8")))
+            sys.exit()
+        elif options.method in ["b85b","base85b"]:
+            print("[*] Finish!!")
+            print()
+            print("[*] " + base64.b85decode(options.text.encode("utf-8")))
+            sys.exit()
+        elif options.method in ["b91","base91"]:
+            print("[*] Finish!!")
+            print()
+            print("[*] " + base91.decode(options.text))
+            sys.exit()
+        elif options.method in ["b92","base92"]:
+            print("[*] Finish!!")
+            print()
+            print("[*] " + base92.decode(options.text.encode("utf-8")))
+            sys.exit()
+        elif options.method in ["b36","base36"]:
+            print("[*] Finish!!")
+            print()
+            print("[*] " + base36.dumps(int(options.text)))
+            sys.exit()
+        elif options.method in ["b58","base58"]:
+            print("[*] Finish!!")
+            print()
+            print("[*] " + base58.b58decode(options.text))
+            sys.exit()
+        elif options.method in ["b62","base62"]:
+            print("[*] Finish!!")
+            print()
+            print("[*] " + base62.decode(options.text))
+            sys.exit()
+
 if __name__ == '__main__':
     print(banner)
-    print(Usage)
-    print()
-
-    if h == '-h' or h == '--help':
-        print(options)
-        exit(0)
-    elif h == "-Caesar" or h == "-c":
-        op = sys.argv[2]
-        # if h == "-Caesar" or h == "-c"):
-        for i in range(26):
-            print(caesar(op,i))
-        exit(0)
-    else :
-        op = sys.argv[2]
-        text = sys.argv[3]
-        # base64
-        if h == "-b64" and (op == "encrypt" or op == "e"):
-            text = text.encode("utf-8")
-            print(base64.b64encode(text))
-            exit(1)
-        elif h == "-b64" and (op == "decrypt" or op == "d"):
-            text = text.encode("utf-8")
-            print(base64.b64decode(text))
-            exit(2)
-        # base16
-        elif h == "-b16" and (op == "decrypt" or op == "d"):
-            text = text.encode("utf-8")
-            print(base64.b16decode(text))
-            exit(3)
-        elif h == "-b16" and (op == "encrypt" or op == "e"):
-            text = text.encode("utf-8")
-            print(base64.b16decode(text))
-            exit(4)
-        # base32
-        elif h == "-b32" and (op == "decrypt" or op == "d"):
-            text = text.encode("utf-8")
-            print(base64.b32decode(text))
-            exit(5)
-        elif h == "-b32" and (op == "encrypt" or op == "e"):
-            text = text.encode("utf-8")
-            print(base64.b32encode(text))
-            exit(6)
-        # base85 a
-        elif h == "-b85a" and (op == "decrypt" or op == "d"):
-            text = text.encode("utf-8")
-            print(base64.a85decode(text))
-            exit(7)
-        elif h == "-b85a" and (op == "encrypt" or op == "e"):
-            text = text.encode("utf-8")
-            print(base64.a85encode(text))
-            exit(8)
-        # base85 b
-        elif h == "-b85b" and (op == "decrypt" or op == "d"):
-            print(base64.b85decode(text))
-            exit(9)
-        elif h == "-b85b" and (op == "encrypt" or op == "e"):
-            text = text.encode("utf-8")
-            print(base64.b85encode(text))
-            exit(10)
-        # base62
-        elif h == "-b62" and (op == "encrypt" or op == "e"):
-            print(base62.encode(int(text)))
-            exit(11)
-        elif h == "-b62" and (op == "decrypt" or op == "d"):
-            print(base62.decode(text))
-            exit(12)
-        # base91
-        elif h == "-b91" and (op == "decrypt" or op == "d"):
-            print(base91.decode(text))
-            exit(13)
-        elif h == "-b91" and (op == "encrypt" or op == "e"):
-            text = text.encode("utf-8")
-            print(base91.encode(text))
-            exit(14)
-        # base92
-        elif h == "-b92" and (op == "decrypt" or op == "d"):
-            print(base92.decode(text))
-            exit(15)
-        elif h == "-b92" and (op == "encrypt" or op == "e"):
-            text = text.encode("utf-8")
-            print(base92.encode(text))
-            exit(16)   
-        # base36
-        elif h == "-b36" and (op == "decrypt" or op == "d"):
-            print(base36.dumps(int(text)))
-            exit(17)
-        elif h == "-b36" and (op == "encrypt" or op == "e"):
-            print(base36.loads(text))
-            exit(18)     
-        # base58
-        elif h == "-b58" and (op == "decrypt" or op == "d"):
-            print(base58.b58decode(text))
-            exit(19)
-        elif h == "-b58" and (op == "encrypt" or op == "e"):
-            print(base58.b58encode(text))
-            exit(20)
+    main()
